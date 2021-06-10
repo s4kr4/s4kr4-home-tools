@@ -18,7 +18,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="video in videos"
+              v-for="video in entries"
               :key="video.id"
             >
               <td>{{ video.title }}</td>
@@ -33,34 +33,20 @@
 
 <script>
 export default {
-  data: function() {
-    return {
-      videos: [],
-    }
-  },
   mounted: function() {
-    setInterval(this.getBroadcastData(), 3000)
+    setInterval(this.$nuxt.refresh, 180000)
   },
   methods: {
     notifyBroadcast: function() {
-      fetch('http://192.168.1.100:8000/api/broadcast/notify')
+      fetch(`${this.$config.API_BASE_URL}/api/broadcast/notify`)
         .then(res => res.json())
         .then(data => console.log(data))
     },
-    getBroadcastData: function() {
-      try {
-        fetch('http://192.168.1.100:8000/api/broadcast/data')
-          .then(res => res.json())
-          .then(data => {
-            this.videos = data.entries
-          })
-        console.log("getBroadcastData")
-        console.log(this.videos)
-      } catch(e) {
-        console.warn(e)
-      }
-    },
   },
+  asyncData: function({ $config }) {
+    return fetch(`${$config.API_BASE_URL}/api/broadcast/data`)
+      .then(res => res.json())
+  }
 }
 </script>
 

@@ -68,4 +68,7 @@ export default {
     host: '0',
     port: 8800,
   },
+  publicRuntimeConfig: {
+    API_BASE_URL: process.env.API_BASE_URL || 'http://localhost:8000',
+  },
 }
