@@ -73,19 +73,14 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
+          title: 'Broadcast',
+          to: '/broadcast'
         },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 's4kr4 home'
+      title: 's4kr4 tools'
     }
   }
 }
