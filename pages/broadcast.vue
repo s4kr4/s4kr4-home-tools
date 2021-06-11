@@ -1,95 +1,54 @@
 <template>
   <v-row>
     <v-col class="text-center">
-      <v-btn
-        class="mb-4"
-        color="red"
-        elevation="2"
-        @click="notifyBroadcast">
-        Notify broadcast
-      </v-btn>
-      <v-simple-table>
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th>TITLE</th>
-              <th>LINK</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="video in entries"
-              :key="video.id"
-            >
-              <td>{{ video.title }}</td>
-              <td><a :href="video.link" target="blank">{{ $generateShortURL(video.yt_videoid) }}</a></td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
-      <v-snackbar
-        v-model="showSnackbar"
-        :color="snackbarColor"
-      >
-        {{ snackbarMessage }}
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            text
-            v-bind="attrs"
-            @click="showSnackbar = false"
-          >
-            Close
-          </v-btn>
-        </template>
-      </v-snackbar>
+      <NotifyButton />
+      <v-data-table
+        :headers="headers"
+        :items="entries"
+      ></v-data-table>
     </v-col>
   </v-row>
 </template>
 
 <script>
+import NotifyButton from '@/components/NotifyButton'
 export default {
+  components: {
+    NotifyButton,
+  },
   data: function() {
     return {
-      showSnackbar: false,
-      snackbarColor: '',
-      snackbarMessage: '',
+      headers: [
+        { text: 'TITLE', value: 'title' },
+        { text: 'LINK', value: 'link' },
+      ],
+      entries: [],
     }
   },
-  mounted: function() {
-    setInterval(this.$nuxt.refresh, 180000)
-  },
   methods: {
-    notifyBroadcast: async function() {
+    async retrieveData() {
       try {
-        const result = await fetch(`${this.$config.API_BASE_URL}/api/broadcast/notify`)
+        const response = await fetch(`${this.$config.API_BASE_URL}/api/broadcast/data`)
 
-        if (result.ok) {
-          const json = await result.json()
+        if (response.ok) {
+          const json = await response.json()
 
-          this.snackbarMessage = json.message
-          this.snackbarColor = 'green'
-        } else {
-          this.snackbarMessage = result.statusText
-          this.snackbarColor = 'red'
+          this.entries = json.entries.map((entry) => {
+            return {
+              id: entry.id,
+              title: entry.title,
+              link: entry.link,
+            }
+          })
         }
-
-        this.showSnackbar = true
       } catch(e) {
         console.warn(e)
       }
     },
   },
-  asyncData: async function({ $config }) {
-    try {
-      const response = await fetch(`${$config.API_BASE_URL}/api/broadcast/data`)
-
-      if (response.ok) {
-        return await response.json()
-      }
-    } catch(e) {
-      console.warn(e)
-    }
-  }
+  mounted: function() {
+    setInterval(this.retrieveData(), 180000)
+  },
 }
 </script>
 
