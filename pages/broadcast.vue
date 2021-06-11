@@ -5,7 +5,7 @@
         class="mb-4"
         color="red"
         elevation="2"
-        v-on:click="notifyBroadcast">
+        @click="notifyBroadcast">
         Notify broadcast
       </v-btn>
       <v-simple-table>
@@ -27,25 +27,68 @@
           </tbody>
         </template>
       </v-simple-table>
+      <v-snackbar
+        v-model="showSnackbar"
+        :color="snackbarColor"
+      >
+        {{ snackbarMessage }}
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            text
+            v-bind="attrs"
+            @click="showSnackbar = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-col>
   </v-row>
 </template>
 
 <script>
 export default {
+  data: function() {
+    return {
+      showSnackbar: false,
+      snackbarColor: '',
+      snackbarMessage: '',
+    }
+  },
   mounted: function() {
     setInterval(this.$nuxt.refresh, 180000)
   },
   methods: {
-    notifyBroadcast: function() {
-      fetch(`${this.$config.API_BASE_URL}/api/broadcast/notify`)
-        .then(res => res.json())
-        .then(data => console.log(data))
+    notifyBroadcast: async function() {
+      try {
+        const result = await fetch(`${this.$config.API_BASE_URL}/api/broadcast/notify`)
+
+        if (result.ok) {
+          const json = await result.json()
+
+          this.snackbarMessage = json.message
+          this.snackbarColor = 'green'
+        } else {
+          this.snackbarMessage = result.statusText
+          this.snackbarColor = 'red'
+        }
+
+        this.showSnackbar = true
+      } catch(e) {
+        console.warn(e)
+      }
     },
   },
-  asyncData: function({ $config }) {
-    return fetch(`${$config.API_BASE_URL}/api/broadcast/data`)
-      .then(res => res.json())
+  asyncData: async function({ $config }) {
+    try {
+      const response = await fetch(`${$config.API_BASE_URL}/api/broadcast/data`)
+
+      if (response.ok) {
+        return await response.json()
+      }
+    } catch(e) {
+      console.warn(e)
+    }
   }
 }
 </script>
