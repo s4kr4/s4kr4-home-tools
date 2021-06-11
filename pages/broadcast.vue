@@ -65,7 +65,7 @@ export default {
   },
   mounted: function() {
     this.retrieveData()
-    this.retrieveTimer = setInterval(this.retrieveData, 5000)
+    this.retrieveTimer = setInterval(this.retrieveData, 180000)
   },
   beforeDestroy: function() {
     clearInterval(this.retrieveTimer)
