@@ -4,6 +4,8 @@
       class="mb-4"
       color="red"
       elevation="2"
+      fixed
+      :style="{ left: '50%', transform: 'translateX(-50%)' }"
       @click="notifyBroadcast">
       Notify broadcast
     </v-btn>

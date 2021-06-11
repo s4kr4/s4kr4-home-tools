@@ -1,8 +1,9 @@
 <template>
   <v-row>
-    <v-col class="text-center">
+    <v-col>
       <NotifyButton />
       <v-data-table
+        class="mt-12"
         :headers="headers"
         :items="entries"
         :loading="isLoading"
