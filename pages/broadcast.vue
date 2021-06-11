@@ -12,7 +12,7 @@
         </template>
         <template v-slot:item.link="{ item }">
           <a :href="item.link" target="_blank">
-            {{ `https://youtu.be/${item.videoId}` }}
+            {{ `youtu.be/${item.videoId}` }}
           </a>
         </template>
       </v-data-table>
