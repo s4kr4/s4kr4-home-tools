@@ -5,7 +5,17 @@
       <v-data-table
         :headers="headers"
         :items="entries"
-      ></v-data-table>
+        :loading="isLoading"
+      >
+        <template v-slot:item.title="{ item }">
+          {{ item.title }}
+        </template>
+        <template v-slot:item.link="{ item }">
+          <a :href="item.link" target="_blank">
+            {{ `https://youtu.be/${item.videoId}` }}
+          </a>
+        </template>
+      </v-data-table>
     </v-col>
   </v-row>
 </template>
@@ -23,10 +33,14 @@ export default {
         { text: 'LINK', value: 'link' },
       ],
       entries: [],
+      retrieveTimer: null,
+      isLoading: false,
     }
   },
   methods: {
     async retrieveData() {
+      this.isLoading = true
+
       try {
         const response = await fetch(`${this.$config.API_BASE_URL}/api/broadcast/data`)
 
@@ -36,6 +50,7 @@ export default {
           this.entries = json.entries.map((entry) => {
             return {
               id: entry.id,
+              videoId: entry.yt_videoid,
               title: entry.title,
               link: entry.link,
             }
@@ -44,10 +59,15 @@ export default {
       } catch(e) {
         console.warn(e)
       }
+
+      this.isLoading = false
     },
   },
   mounted: function() {
-    setInterval(this.retrieveData(), 180000)
+    this.retrieveTimer = setInterval(this.retrieveData, 5000)
+  },
+  beforeDestroy: function() {
+    clearInterval(this.retrieveTimer)
   },
 }
 </script>
