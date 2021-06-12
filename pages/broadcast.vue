@@ -2,8 +2,8 @@
   <v-row>
     <v-col>
       <NotifyButton />
+      <h2 class="mt-12">Recent broadcasts</h2>
       <v-data-table
-        class="mt-12"
         :headers="headers"
         :items="entries"
         :loading="isLoading"
