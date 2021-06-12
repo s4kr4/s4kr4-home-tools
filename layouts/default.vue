@@ -61,8 +61,8 @@ export default {
         },
         {
           icon: 'mdi-video',
-          title: 'Broadcast',
-          to: '/broadcast'
+          title: 'Lives',
+          to: '/lives'
         },
       ],
       miniVariant: false,

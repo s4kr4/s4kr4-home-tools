@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <NotifyButton />
-      <h2 class="mt-12">Recent broadcasts</h2>
+      <h2 class="mt-12">My lives</h2>
       <v-data-table
         :headers="headers"
         :items="entries"
@@ -43,7 +43,7 @@ export default {
       this.isLoading = true
 
       try {
-        const response = await fetch(`${this.$config.API_BASE_URL}/api/broadcast/data`)
+        const response = await fetch(`${this.$config.API_BASE_URL}/api/lives/data`)
 
         if (response.ok) {
           const json = await response.json()

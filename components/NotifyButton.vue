@@ -6,8 +6,8 @@
       elevation="2"
       fixed
       :style="{ left: '50%', transform: 'translateX(-50%)' }"
-      @click="notifyBroadcast">
-      Notify broadcast
+      @click="notifyLives">
+      Notify lives
     </v-btn>
     <v-snackbar
       v-model="showSnackbar"
@@ -37,9 +37,9 @@ export default {
     }
   },
   methods: {
-    notifyBroadcast: async function() {
+    notifyLives: async function() {
       try {
-        const response = await fetch(`${this.$config.API_BASE_URL}/api/broadcast/notify`)
+        const response = await fetch(`${this.$config.API_BASE_URL}/api/lives/notify`)
 
         if (response.ok) {
           const json = await response.json()
