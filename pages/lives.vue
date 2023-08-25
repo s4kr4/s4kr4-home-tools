@@ -8,12 +8,9 @@
         :items="entries"
         :loading="isLoading"
       >
-        <template v-slot:item.title="{ item }">
-          {{ item.title }}
-        </template>
         <template v-slot:item.link="{ item }">
           <a :href="item.link" target="_blank">
-            {{ `youtu.be/${item.videoId}` }}
+            {{ item.linkText }}
           </a>
         </template>
       </v-data-table>
@@ -23,6 +20,8 @@
 
 <script>
 import NotifyButton from '@/components/NotifyButton'
+import dayjs from 'dayjs'
+
 export default {
   components: {
     NotifyButton,
@@ -32,6 +31,7 @@ export default {
       headers: [
         { text: 'TITLE', value: 'title' },
         { text: 'LINK', value: 'link' },
+        { text: 'PUB DATE', value: 'pubDate' },
       ],
       entries: [],
       retrieveTimer: null,
@@ -48,12 +48,13 @@ export default {
         if (response.ok) {
           const json = await response.json()
 
-          this.entries = json.entries.map((entry) => {
+          this.entries = json.data.map((entry) => {
             return {
               id: entry.id,
-              videoId: entry.yt_videoid,
               title: entry.title,
               link: entry.link,
+              linkText: `youtu.be/${entry.videoId}`,
+              pubDate: dayjs(entry.pubDate).format('YYYY/MM/DD HH:mm:ss'),
             }
           })
         }
