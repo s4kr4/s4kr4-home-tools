@@ -45,10 +45,10 @@ export default {
           const json = await response.json()
 
           this.snackbarMessage = json.message
-          this.snackbarColor = 'green'
+          this.snackbarColor = json.notify ? 'success' : 'info'
         } else {
           this.snackbarMessage = response.statusText
-          this.snackbarColor = 'red'
+          this.snackbarColor = 'error'
         }
 
         this.showSnackbar = true
